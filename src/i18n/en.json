@@ -1,0 +1,24 @@
+{
+    "login":{
+        "title":"Sign In",
+        "email":"Email address",
+        "password":"Password",
+        "rememberMe":"Remember me",
+        "submit":"Login"
+    },
+    "signup":{
+        "title":"Create an account",
+        "email":"Email address",
+        "password":"Password",
+        "confirmPassword":"Confirm password",
+        "submit":"Sign up"
+    },
+    "movies":{
+        "emptyList":"Your movie list is empty",
+        "add":"Add a new movie",
+        "edit":"Edit"
+    }
+    }
+
+
+
