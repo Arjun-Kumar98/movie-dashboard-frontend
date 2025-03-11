@@ -3,16 +3,16 @@ import React from "react";
 interface ButtonProps{
     type?:'submit'|'reset';
     label:string;
-    onClick:()=>void;
+    onClick?:()=>void;
     className:string
 }
 
-const Button:React.FC<ButtonProps>=({
+const Button=({
      type,
      label,
      onClick,
      className=''
-})=>{
+}:ButtonProps)=>{
     return(
         <button
           type={type}

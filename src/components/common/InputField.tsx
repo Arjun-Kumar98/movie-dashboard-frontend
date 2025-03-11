@@ -5,14 +5,16 @@ interface InputProps{
     value:string;
     onChange:(e:React.ChangeEvent<HTMLInputElement>)=>void;
     placeholder?:string;
+    hasError:boolean;
 }
 
-const Input:React.FC<InputProps>=({
+const Input=({
     type,
     value,
     onChange,
-    placeholder
-})=>{
+    placeholder,
+    hasError
+}:InputProps)=>{
     return (
         <div className="input-wrapper">
             <input
@@ -20,6 +22,7 @@ const Input:React.FC<InputProps>=({
             value={value}
             onChange={onChange}
             placeholder={placeholder}
+           
             />
         </div>
     );
