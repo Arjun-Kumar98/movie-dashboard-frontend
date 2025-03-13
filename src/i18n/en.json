@@ -17,6 +17,10 @@
         "emptyList":"Your movie list is empty",
         "add":"Add a new movie",
         "edit":"Edit"
+    },
+    "pagination":{
+        "prev":"Previous",
+        "next":"Next"
     }
     }
 

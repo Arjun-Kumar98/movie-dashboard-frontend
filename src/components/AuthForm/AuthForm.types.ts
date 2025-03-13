@@ -1,9 +1,9 @@
 export type AuthFormMode = 'login'|'signup';
 
 export interface AuthFormData{
-    emailId:String,
+    emailId:string,
     password:string;
-    confirmPassword?:string;
+    confirmPassword:string;
 }
 
 export interface AuthFormProps{

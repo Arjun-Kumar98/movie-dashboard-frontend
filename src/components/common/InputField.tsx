@@ -2,28 +2,30 @@ import React from "react";
 
 interface InputProps{
     type?:string;
-    value:string;
-    onChange:(e:React.ChangeEvent<HTMLInputElement>)=>void;
+    name:string;
+    register:any;
     placeholder?:string;
-    hasError:boolean;
+    hasError?:boolean;
+    errorMessage?:string;
 }
 
 const Input=({
     type,
-    value,
-    onChange,
+    name,
     placeholder,
-    hasError
+    hasError,
+    errorMessage,
+    register
 }:InputProps)=>{
     return (
         <div className="input-wrapper">
             <input
             type={type}
-            value={value}
-            onChange={onChange}
             placeholder={placeholder}
-           
+            {...register(name)}
+            className={`input-field ${hasError?'input-error':''}`}
             />
+            {hasError && <p className="input-error-text">{errorMessage}</p>}
         </div>
     );
 };

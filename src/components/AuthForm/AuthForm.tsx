@@ -1,78 +1,67 @@
-import React,{useState} from'react';
+import React from "react";
+import {useForm} from 'react-hook-form';
+import { AuthFormProps,AuthFormData } from "./AuthForm.types";
 import InputField from '../common/InputField';
 import Button from '../common/Button';
-import {t} from '../../i18n/index';
-import { AuthFormProps } from './AuthForm.types';
+import {t} from '../../i18n';
 
-const AuthForm=({mode,onSubmit}:AuthFormProps)=>{
-    const[formData,setFormData]=useState({
-        emailId:'',
-        password:'',
-        confirmPassword:''
-    });
+const AuthForm: React.FC<AuthFormProps> = ({mode,onSubmit})=>{
+    const{
+        register,
+        handleSubmit,
+        formState:{errors},
+        watch,
+    }=useForm<AuthFormData>();
 
-
-
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-        setFormData({
-            ...formData,
-            [e.target.name]:e.target.value
-        });
+    const submitHandler = (data:AuthFormData)=>{
+        if(mode==='signup' && data.password !== data.confirmPassword){
+            alert(t('signup.confirmPassword')+'does not match.');
+            return;
+        }
+        onSubmit(data);
     };
-
-    const handleSubmit=(e:React.FormEvent)=>{
-        e.preventDefault();
-       if(mode=='signup' && formData.password!== formData.confirmPassword){
-        alert(t('signup.confirmPassword')+'does not match.');
-        return;
-       }
-
-       onSubmit({
-        emailId:formData.emailId,
-        password:formData.password,
-        confirmPassword:formData.confirmPassword
-       });
-    };
-    
 
     return(
-        <form onSubmit ={handleSubmit}>
+        <form onSubmit={handleSubmit(submitHandler)}>
             <h2>{t(`${mode}.title`)}</h2>
 
             <InputField
             type="email"
-            value={formData.emailId}
-            onChange={handleChange}
+            name="emailId"
             placeholder={t(`${mode}.email`)}
-            hasError
-            />
+            register={register}
+            hasError={!!errors.emailId}
+            errorMessage={errors.emailId?.message}
+        />
 
+        <InputField
+        type="password"
+        name="password"
+        placeholder={t(`${mode}.password`)}
+        register={register}
+        hasError={!!errors.password}
+        errorMessage={errors.password?.message}
+        />
+
+        {mode === 'signup' &&(
             <InputField
-             type="password"
-             value={formData.password}
-             onChange={handleChange}
-             placeholder={t(`${mode}.password`)}
-             hasError
-             />
+            type="password"
+            name="confirmPassword"
+            placeholder={t('signup.confirmPassword')}
+            register={register}
+            hasError={!!errors.confirmPassword}
+            errorMessage={errors.confirmPassword?.message}
+        />
+        )}
 
-             {mode === 'signup' && (
-                <InputField
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder={t('signup.confirmPassword')}
-                  hasError
-                  />
-
-             )}
-
-             <Button
-             type="submit"
-             label={t(`${mode}.submit`)}
-             className=''
-        
-             />
+        <Button
+        type="submit"
+        label={t(`${mode}.submit`)}
+        className=""
+        />
         </form>
     );
+
 };
+
 export default AuthForm;
