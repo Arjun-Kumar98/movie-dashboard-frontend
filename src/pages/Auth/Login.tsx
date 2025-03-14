@@ -21,7 +21,7 @@ const LoginPage: React.FC=()=>{
         }
     };
     return (
-        <div className="auth-page-wrapper">
+        <div className="page-wrapper">
             <AuthForm mode="login" onSubmit={handleLogin}/>
         </div>
     );

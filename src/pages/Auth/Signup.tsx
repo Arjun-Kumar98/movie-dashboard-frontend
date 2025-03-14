@@ -23,7 +23,7 @@ const SignupPage:React.FC=()=>{
     };
 
     return (
-        <div className="auth-page-wrapper">
+        <div className="page-wrapper">
             <AuthForm mode="signup" onSubmit={handleSignup}/>
         </div>
     );

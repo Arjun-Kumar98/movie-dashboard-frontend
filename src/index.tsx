@@ -6,7 +6,6 @@ import reportWebVitals from './reportWebVitals';
 
 import './styles/global.css';
 import './styles/form.css';
-import './styles/auth.css'
 import './styles/button.css';
 
 const root = ReactDOM.createRoot(

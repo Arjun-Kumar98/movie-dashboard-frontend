@@ -34,4 +34,11 @@
     font-size: 12px;
     margin-top: 6px;
   }
+  .auth-page-wrapper {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 40px;
+    background-color: transparent;
+    text-align: center;
+  }
   
