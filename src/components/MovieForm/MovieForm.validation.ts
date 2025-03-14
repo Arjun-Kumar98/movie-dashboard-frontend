@@ -8,7 +8,7 @@ export const movieFormSchema = Yup.object().shape({
     .min(1900, 'Year must be after 1900')
     .max(new Date().getFullYear(), 'Year cannot be after current year'),
 
-  // ✅ Poster validation ONLY in Add mode
+
   posterFile: Yup.mixed().when('$isEditMode', {
     is: false,
     then: (schema) =>
