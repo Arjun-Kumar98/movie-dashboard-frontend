@@ -29,8 +29,6 @@ export interface Movie{
     
     };
 
-    // src/api/movies.api.ts
-
 export const addMovie = async (
     data: { title: string; publishYear: number; posterFile: File },
     userId: string,
@@ -41,7 +39,7 @@ export const addMovie = async (
       formData.append('title', data.title);
       formData.append('publishYear', String(data.publishYear));
       formData.append('userId', userId);
-      formData.append('image', data.posterFile); // Backend expects this key as 'image'
+      formData.append('image', data.posterFile); 
   
       const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/movies/upload`, {
         method: 'POST',
