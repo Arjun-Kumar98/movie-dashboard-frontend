@@ -26,7 +26,7 @@ const MovieEdit = () => {
         });
       } else {
         // optional: show error or redirect
-        console.error(result.error);
+        navigate('/movieList');
       }
     };
   
