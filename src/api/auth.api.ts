@@ -1,11 +1,9 @@
 export interface LoginPayload{
-    emailId:string;
+    email:string;
     password:string;
 }
 
-export interface SignupPayload extends LoginPayload{
-    confirmPassword:string;
-}
+
 
 export const loginUser = async(payload: LoginPayload)=>{
     try{
@@ -23,9 +21,9 @@ export const loginUser = async(payload: LoginPayload)=>{
     }
 };
 
-export const signupUser = async (payload: SignupPayload) => {
+export const signupUser = async (payload: LoginPayload) => {
     try{
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL} /api/auth/signup`,{
+        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/auth/signup`,{
             method:'POST',
             headers:{'Content-Type':'application/json'},
             body:JSON.stringify(payload),

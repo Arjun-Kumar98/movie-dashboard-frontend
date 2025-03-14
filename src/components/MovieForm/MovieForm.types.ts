@@ -1,12 +1,13 @@
+export interface MovieFormProps {
+  mode: 'add' | 'edit';
+  initialValues?: MovieFormData;
+  onSubmit: (data: MovieFormData) => void;
+}
+
 export interface MovieFormData {
-    title: string;
-    publishingYear: number;
-    posterFile?:FileList | any; // Accepts FileList or empty; validated via schema
-  }
-  
-  export interface MovieFormProps {
-    mode: 'add' | 'edit';
-    initialValues?: MovieFormData & { posterUrl?: string };
-    onSubmit: (data: MovieFormData) => void;
-  }
-  
+  title: string;
+  publishYear: number;
+  posterFile?: FileList|any;
+  posterUrl?:string;
+ // Optional for edit mode preview only
+}

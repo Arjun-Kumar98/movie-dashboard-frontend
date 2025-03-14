@@ -1,5 +1,7 @@
 import React from 'react';
 import {Movie} from '../../api/movies.api';
+import "./MovieCard.css";
+
 
 interface MovieCardProps{
     movie:Movie;
@@ -11,7 +13,7 @@ const MovieCard: React.FC<MovieCardProps> = ({movie,onClick})=>{
         <div className="movie-card" onClick={onClick}>
             <img src={movie.posterUrl} alt={movie.title} className="movie-poster"/>
             <h3 className='movie-title'>{movie.title}</h3>
-            <p className='movie-year'>{movie.publishingYear}</p>
+            <p className='movie-year'>{movie.publishYear}</p>
         </div>
     );
 };

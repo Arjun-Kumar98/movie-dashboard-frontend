@@ -1,0 +1,37 @@
+.input-wrapper {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-field {
+    padding: 12px 16px;
+    background-color: #173D4B;
+    color: #ffffff;
+    border: 1px solid #173D4B;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border 0.2s ease, background-color 0.2s ease;
+    caret-color: #00B2FF; /* Blue typing cursor */
+  }
+  
+  /* ✅ When typing (focused), background becomes white */
+  .input-field:focus {
+    background-color: #ffffff;
+    color: #000000;
+    border-color: #2ED573; /* Green border */
+    outline: none;
+  }
+  
+  /* Error state */
+  .input-error {
+    border-color: #FF4D4F !important;
+  }
+  
+  /* Error message text */
+  .input-error-text {
+    color: #FF4D4F;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  

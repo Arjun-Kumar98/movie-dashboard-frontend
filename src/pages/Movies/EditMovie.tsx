@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MovieFormData } from '../../components/MovieForm/MovieForm.types';
 import MovieForm from '../../components/MovieForm/MovieForm';
+import {getMovieById } from '../../api/movies.api';
 import { updateMovie } from '../../api/movies.api';
+import { t } from "../../i18n";
+import './MoviePage.css'
 
 const MovieEdit = () => {
   const { movieId } = useParams<{ movieId: string }>();
@@ -10,34 +13,26 @@ const MovieEdit = () => {
   const userId = localStorage.getItem('userId') || '';
   const token = localStorage.getItem('token') || '';
   const [initialValues, setInitialValues] = useState<MovieFormData & { posterUrl?: string } | null>(null);
-
   useEffect(() => {
     const fetchMovie = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/movies/${movieId}`, {
-          headers: { Authorization: `Bearer ${token}` },
+      if (!token || !movieId) return;
+      const result = await getMovieById(movieId, token);
+      if (result.success && result.data) {
+        setInitialValues({
+          title: result.data.title,
+          publishYear: result.data.publishYear,
+          posterUrl: result.data.posterUrl,
+          posterFile: null,
         });
-        const data = await response.json();
-        if (response.ok) {
-          setInitialValues({
-            title: data.title,
-            publishingYear: data.publishingYear,
-            posterFile: null,
-            posterUrl: data.posterUrl,
-          });
-        } else {
-          alert('Failed to fetch movie data');
-          navigate('/movieList');
-        }
-      } catch (error) {
-        console.error('Fetch error:', error);
-        alert('Error fetching movie');
-        navigate('/movieList');
+      } else {
+        // optional: show error or redirect
+        console.error(result.error);
       }
     };
-
+  
     fetchMovie();
-  }, [movieId, navigate, token]);
+  }, [movieId, token]);
+  
 
   const handleUpdateMovie = async (formData: MovieFormData) => {
     const fileList = formData.posterFile as FileList;
@@ -47,7 +42,7 @@ const MovieEdit = () => {
       Number(movieId),
       {
         title: formData.title,
-        publishingYear: formData.publishingYear,
+        publishYear: formData.publishYear,
         posterFile,
       },
       userId,
@@ -55,16 +50,17 @@ const MovieEdit = () => {
     );
 
     if (result.success) {
-      alert('Movie updated successfully!');
+    
+alert(t('api.movieUpdateSuccess'));
       navigate('/movieList');
     } else {
-      alert(result.error || 'Failed to update movie.');
+      alert(result.error || t('api.movieUpdateFailed'));
     }
   };
 
   return (
-    <div className="movie-edit-wrapper">
-      <h1>Edit Movie</h1>
+    <div className="movie-wrapper">
+      <h1>{t("movies.edit")}</h1>
       {initialValues ? (
         <MovieForm
           mode="edit"

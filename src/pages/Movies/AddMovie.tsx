@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { MovieFormData } from '../../components/MovieForm/MovieForm.types';
 import MovieForm from '../../components/MovieForm/MovieForm';
 import { addMovie } from '../../api/movies.api';
+import { t } from "../../i18n";
+import './MoviePage.css';
 
 const AddMovie = () => {
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ const AddMovie = () => {
     const response = await addMovie(
       {
         title: data.title,
-        publishingYear: data.publishingYear,
+        publishYear: data.publishYear,
         posterFile: posterFile,
       },
       userId,
@@ -29,16 +31,17 @@ const AddMovie = () => {
     );
 
     if (response.success) {
-      alert('Movie created successfully!');
+     
+alert(t('api.movieAddSuccess'));
       navigate('/movieList');
     } else {
-      alert(response.error || 'Failed to create movie.');
+      alert(response.error ||t('api.movieAddFailed'));
     }
   };
 
   return (
-    <div className="movie-create-wrapper">
-      <h1>Create a New Movie</h1>
+    <div className="movie-wrapper">
+      <h1>{t("movies.add")}</h1>
       <MovieForm mode="add" onSubmit={handleAddMovie} />
     </div>
   );

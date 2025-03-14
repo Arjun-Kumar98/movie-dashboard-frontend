@@ -1,122 +1,120 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate } from 'react-router-dom';
-import { MovieFormData, MovieFormProps } from './MovieForm.types';
-import { getMovieFormSchema } from './MovieForm.validation';
+import { MovieFormProps, MovieFormData } from './MovieForm.types';
+import { movieFormSchema } from './MovieForm.validation';
 import InputField from '../common/InputField';
 import Button from '../common/Button';
+import { useNavigate } from 'react-router-dom';
+import './MovieForm.css';
 
-const MovieForm: React.FC<MovieFormProps> = ({
-  mode,
-  initialValues,
-  onSubmit,
-}) => {
-  const schema = getMovieFormSchema(!!initialValues?.posterUrl, mode);
+const MovieForm: React.FC<MovieFormProps> = ({ mode, initialValues, onSubmit }) => {
+  const navigate = useNavigate();
+
+  const [isPosterRemoved, setIsPosterRemoved] = useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
     reset,
-    resetField,
     formState: { errors },
   } = useForm<MovieFormData>({
     defaultValues: initialValues,
-    resolver: yupResolver(schema),
-    mode: 'onSubmit',
+    resolver: yupResolver(movieFormSchema),
+  context: { isEditMode: mode === 'edit' }
   });
 
-  const navigate = useNavigate();
   const posterFile = watch('posterFile');
-  const [isPosterRemoved, setIsPosterRemoved] = useState(false);
+  const hasUploadedPoster = posterFile && posterFile.length > 0;
+
+  const posterPreviewSrc =
+    hasUploadedPoster
+      ? URL.createObjectURL(posterFile[0])
+      : (!isPosterRemoved && initialValues?.posterUrl) || '';
 
   const submitHandler = (data: MovieFormData) => {
+    console.log("bubble trouble");
     onSubmit(data);
   };
 
   const handleRemovePoster = () => {
-    resetField('posterFile');
     setIsPosterRemoved(true);
+    reset({ ...initialValues, posterFile: null });
   };
-
-  const showPosterPreview =
-    (posterFile?.length > 0 || (initialValues?.posterUrl && !isPosterRemoved));
-
-  const posterPreviewSrc =
-    posterFile?.length > 0
-      ? URL.createObjectURL(posterFile[0])
-      : initialValues?.posterUrl;
 
   return (
     <form onSubmit={handleSubmit(submitHandler)} className="movie-form">
-      <h2>{mode === 'edit' ? 'Edit Movie' : 'Add Movie'}</h2>
+      <div className="movie-form-container">
+        {/* Poster Upload or Preview */}
+        <div className="poster-upload">
+          {posterPreviewSrc ? (
+            <div className="poster-preview-wrapper">
+              <img
+                src={posterPreviewSrc}
+                alt="Poster Preview"
+                className="poster-preview"
+              />
+              <button
+                type="button"
+                className="remove-poster-btn"
+                onClick={handleRemovePoster}
+              >
+                ❌ Remove Poster
+              </button>
+            </div>
+          ) : (
+            <>
+              <label>Upload Poster</label>
+              <input type="file" accept="image/*" {...register('posterFile')} />
+              {errors.posterFile?.message && (
+                <p className="input-error-text">{String(errors.posterFile.message)}</p>
+              )}
+            </>
+          )}
+        </div>
 
-      <InputField
-        type="text"
-        name="title"
-        placeholder="Title"
-        register={register}
-        hasError={!!errors.title}
-        errorMessage={errors.title?.message ?? ''}
-      />
+        {/* Form Inputs */}
+        <div className="form-inputs">
+          <InputField
+            type="text"
+            name="title"
+            placeholder="Title"
+            register={register}
+            hasError={!!errors.title}
+            errorMessage={errors.title?.message ?? ''}
+          />
 
-      <InputField
-        type="number"
-        name="publishingYear"
-        placeholder="Publishing Year"
-        register={register}
-        hasError={!!errors.publishingYear}
-        errorMessage={errors.publishingYear?.message ?? ''}
-      />
+          <InputField
+            type="number"
+            name="publishYear"
+            placeholder="Publishing Year"
+            register={register}
+            hasError={!!errors.publishYear}
+            errorMessage={errors.publishYear?.message ?? ''}
+          />
 
-      <div className="poster-upload">
-        <label>Upload Poster</label>
-        <input type="file" accept="image/*" {...register('posterFile')} />
-
-        {errors.posterFile?.message && (
-          <p className="input-error-text">
-            {String(errors.posterFile.message)}
-          </p>
-        )}
-
-        {showPosterPreview && posterPreviewSrc && (
-          <div className="poster-preview-wrapper">
-            <img
-              src={posterPreviewSrc}
-              alt="Poster Preview"
-              className="poster-preview"
+          {/* Buttons */}
+          <div className="form-actions">
+            <Button
+              type="submit"
+              label={mode === 'edit' ? 'Update Movie' : 'Add Movie'}
+              className="submit-button"
             />
-            <button
-              type="button"
-              className="remove-poster-btn"
-              onClick={handleRemovePoster}
-            >
-              ❌ Remove Poster
-            </button>
+            <Button
+              type="reset"
+              label="Cancel"
+              className="cancel-button"
+              onClick={() => {
+                if (mode === 'edit') navigate('/movieList');
+                else {
+                  reset();
+                  setIsPosterRemoved(false);
+                }
+              }}
+            />
           </div>
-        )}
-      </div>
-
-      <div className="form-actions">
-        <Button
-          type="submit"
-          label={mode === 'edit' ? 'Update Movie' : 'Add Movie'}
-          className="submit-button"
-        />
-        <Button
-          type="reset"
-          label="Cancel"
-          onClick={() => {
-            if (mode === 'edit') {
-              navigate('/movieList');
-            } else {
-              reset();
-              setIsPosterRemoved(false);
-            }
-          }}
-          className="cancel-button"
-        />
+        </div>
       </div>
     </form>
   );

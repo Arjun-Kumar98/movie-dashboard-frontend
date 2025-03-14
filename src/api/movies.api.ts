@@ -1,13 +1,13 @@
 export interface Movie{
     id:number;
     title:string;
-    publishingYear:number;
+    publishYear:number;
     posterUrl:string;
 }
     export const getAllMovies = async(userId:number,page:number=1)=>{
         try{
             const response = await fetch(
-                `${process.env.REACT_APP_API_BASE_URL}/api/movies?userId=${userId}&page=${page}&limit=8`,
+                `${process.env.REACT_APP_API_BASE_URL}/api/movies/list?userId=${userId}&page=${page}&limit=8`,
                 {
                     method:'GET',
                     headers:{
@@ -32,14 +32,14 @@ export interface Movie{
     // src/api/movies.api.ts
 
 export const addMovie = async (
-    data: { title: string; publishingYear: number; posterFile: File },
+    data: { title: string; publishYear: number; posterFile: File },
     userId: string,
     token: string
   ) => {
     try {
       const formData = new FormData();
       formData.append('title', data.title);
-      formData.append('publishingYear', String(data.publishingYear));
+      formData.append('publishYear', String(data.publishYear));
       formData.append('userId', userId);
       formData.append('image', data.posterFile); // Backend expects this key as 'image'
   
@@ -64,14 +64,14 @@ export const addMovie = async (
 
 export const updateMovie = async (
     movieId: number,
-    data: { title: string; publishingYear: number; posterFile: File | null },
+    data: { title: string; publishYear: number; posterFile: File | null },
     userId: string,
     token: string
   ) => {
     try {
       const formData = new FormData();
       formData.append('title', data.title);
-      formData.append('publishingYear', String(data.publishingYear));
+      formData.append('publishYear', String(data.publishYear));
       formData.append('userId', userId);
       formData.append('movieId', String(movieId));
       if (data.posterFile) {
@@ -94,4 +94,34 @@ export const updateMovie = async (
     }
   };
   
+  export const getMovieById = async (
+    movieId: string,
+    token: string
+  ) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_BASE_URL}/api/movies/${movieId}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      const result = await response.json();
+  
+      return {
+        success: response.ok,
+        data: result.movie || null,
+      };
+    } catch (error) {
+      console.error('Fetch movie by ID error:', error);
+      return {
+        success: false,
+        data: null,
+        error: 'Failed to fetch movie details.',
+      };
+    }
+  };
   
