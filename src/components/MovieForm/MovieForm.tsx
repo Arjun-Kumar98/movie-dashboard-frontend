@@ -34,7 +34,6 @@ const MovieForm: React.FC<MovieFormProps> = ({ mode, initialValues, onSubmit }) 
       : (!isPosterRemoved && initialValues?.posterUrl) || '';
 
   const submitHandler = (data: MovieFormData) => {
-    console.log("bubble trouble");
     onSubmit(data);
   };
 
